@@ -1,0 +1,30 @@
+(print "--- Interaktywny program liczacy binarnie ---\n")
+
+(def decimal (Number (input "Podaj liczbe dziesietna, od ktorej zaczniemy: ")))
+(def limit (Number (input "Podaj gorny limit liczenia: ")))
+
+(loop (decimal <= limit) (do
+
+    (def n decimal)
+    (def binary_num 0)
+    (def power_of_10 1)
+
+    (loop (n > 0) (do
+        (def remainder (n % 2))
+        (def n (n / 2))
+        (def binary_num (binary_num + (remainder * power_of_10)))
+        (def power_of_10 (power_of_10 * 10))
+    ))
+
+    (print "Dziesietnie: " decimal " -> Binarnie: ")
+
+    (if (decimal < 32) (print "0"))
+    (if (decimal < 16) (print "0"))
+    (if (decimal < 8) (print "0"))
+    (if (decimal < 4) (print "0"))
+    (if (decimal < 2) (print "0"))
+
+    (print binary_num "\n")
+    
+    (def decimal (decimal + 1))
+))

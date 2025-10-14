@@ -1,0 +1,21 @@
+(def my_string "Hello World")
+(print "Oryginalny string: " my_string "\n")
+
+(def len_string (len my_string))
+(def half_len ((len_string - 1) / 2))
+
+(def i 0)
+(loop (i < half_len)
+    (do
+        (def start_char (get my_string i))
+        (def end_index ((len_string - 1) - i))
+        (def end_char (get my_string end_index))
+
+        (set my_string i end_char)
+        (set my_string end_index start_char)
+
+        (def i (i + 1))
+    )
+)
+
+(print "Odwrócony string: " my_string "\n")

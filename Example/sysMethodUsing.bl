@@ -1,0 +1,6 @@
+(print "Sprawdzanie obecnosci plikow .cpp w katalogu (Windows)...\n")
+(def test (input "podaj format:"))
+(def command ("dir /b . | findstr " + test))
+(def result (sys command))
+(if ((len result) > 0) (do (print "Sukces! Znaleziono nastepujace pliki " test ":\n") (print result)))
+(if ((len result) == 0) (print "Info: Nie znaleziono zadnych plikow .cpp w tym katalogu.\n"))

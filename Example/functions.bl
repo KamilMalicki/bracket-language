@@ -1,0 +1,17 @@
+(print "--- Test wlasnych funkcji ---\n")
+
+(def kwadrat (fun (x)
+    (x * x)
+))
+
+(def srednia (fun (a b)
+    ((a + b) / 2)
+))
+
+
+(print "Kwadrat liczby 8 to: " (kwadrat 8) "\n")
+(print "Srednia liczb 10 i 20 to: " (srednia 10 20) "\n")
+
+(print "Funkcja jako wartosc:")
+(def operacja kwadrat)
+(print "(operacja 7) -> " (operacja 7) "\n")
