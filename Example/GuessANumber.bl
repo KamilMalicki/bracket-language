@@ -1,1 +1,19 @@
+(def sekretna_liczba (random 1 100))
+(def zgadniete "false")
+(def proba 0)
 
+(print "Zgadnij liczbe od 1 do 100!" "\n")
+
+(loop (zgadniete == "false")(do
+        (print "Podaj swoja liczbe: ")
+        (def strzal_str (input))
+        (def strzal_num (Number strzal_str))
+        (def proba (proba + 1))
+        (if (strzal_num > sekretna_liczba) (print "Za duzo!\n"))
+        (if (strzal_num < sekretna_liczba) (print "Za malo!\n"))
+        (if (strzal_num == sekretna_liczba) (do
+                (print "Brawo! Zgadles za " proba " razem!\n")
+                (def zgadniete "true")
+        ))
+    )
+)
