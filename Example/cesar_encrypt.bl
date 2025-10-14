@@ -1,0 +1,30 @@
+(def szyfruj_znak (fun (znak przesuniecie)
+    (do
+        (def kod_znaku (ord znak))
+        (def nowy_kod (kod_znaku + przesuniecie))
+        (chr nowy_kod)
+    )
+))
+
+(print "--- Szyfr Cezara (wszystkie znaki) ---\n")
+(print "Podaj tekst do zaszyfrowania:")
+(def tekst_jawny (input))
+
+(print "Podaj klucz przesuniecia:")
+(def klucz (Number (input)))
+
+(def tekst_zaszyfrowany "")
+(def i 0)
+
+(loop (i < (len tekst_jawny))
+    (do
+        (def aktualny_znak (get tekst_jawny i))
+        (def zaszyfrowany_znak (szyfruj_znak aktualny_znak klucz))
+        (def tekst_zaszyfrowany (tekst_zaszyfrowany + zaszyfrowany_znak))
+        (def i (i + 1))
+    )
+)
+
+(print "--------------------\n")
+(print "Tekst zaszyfrowany:")
+(print tekst_zaszyfrowany "\n")
