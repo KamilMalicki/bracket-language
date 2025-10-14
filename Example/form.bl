@@ -1,0 +1,17 @@
+(print "Czesc! Jak masz na imie? ")
+(def imie (input))
+
+(print "Ile masz lat, " imie "? ")
+(def wiek_str (input))
+(def wiek_num (Number wiek_str))
+
+(def len_imie (len imie))
+(if (len_imie > 10) (print "Masz bardzo dlugie imie!" "\n"))
+
+(if (wiek_num >= 18) ( do
+    (print "Jestes pelnoletni/a. \n")
+    (print "Masz więcej niz 18 lat. \n")
+))
+
+(print "Typ zmiennej 'imie' to: " (typeof imie) "\n")
+(print "Typ zmiennej 'wiek_num' to: " (typeof wiek_num) "\n")
