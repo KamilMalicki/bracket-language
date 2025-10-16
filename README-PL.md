@@ -203,3 +203,6 @@ Poniższy skrypt implementuje prostą grę, demonstrując użycie wielu funkcji 
 (print "Gratulacje! Odgadłeś liczbę.")
 (print "Udało Ci się w " + (String licznik_prob) + " próbach.")
 ```
+
+6. Autor
+Ten Język programowania i interpreter w całości został napisany przez Kamila Malickiego.
