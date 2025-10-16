@@ -134,7 +134,7 @@ All other values are treated as **true**.
     (def add (fun (a b) (
       a + b
     )))
-    (print (add 5 3)) ; Prints 8
+    (print (add 5 3))
     ```
 
 ### 4.5. String Operations
@@ -176,14 +176,12 @@ All other values are treated as **true**.
 The following script implements a simple game, demonstrating the use of many of the language's features.
 
 ```lisp
-; Set up the game
 (def secret_number (random 1 100))
 (def guess 0)
 (def attempt_counter 0)
 
 (print "Guess a number between 1 and 100.")
 
-; Main game loop
 (loop (guess != secret_number) (
   do
     (def guess_str (input "Enter your guess: "))
@@ -199,7 +197,6 @@ The following script implements a simple game, demonstrating the use of many of 
     ))
 ))
 
-; End of the game
 (print "Congratulations! You guessed the number.")
 (print "It took you " + (String attempt_counter) + " attempts.")
 ```
