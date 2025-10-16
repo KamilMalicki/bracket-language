@@ -204,5 +204,5 @@ The following script implements a simple game, demonstrating the use of many of 
 (print "It took you " + (String attempt_counter) + " attempts.")
 ```
 
-6. Author
+## 7\. Author
 This interpreter and language were created by Kamil Malicki.
