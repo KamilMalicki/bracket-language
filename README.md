@@ -46,11 +46,11 @@ The fundamental unit of code is the S-expression: a list of elements enclosed in
 A key feature of the language is its support for operators in infix notation within S-expressions. Arithmetic expressions are processed from left to right, with no operator precedence.
 
 ```lisp
-; Correct usage:
-(100 - 20 + 5) ; Result: 85 (100-20=80, 80+5=85)
+ Correct usage:
+(100 - 20 + 5)  Result: 85 (100-20=80, 80+5=85)
 
-; Complex expression:
-(5 * (100 / 20)) ; Result: 25. Parentheses enforce evaluation order.
+ Complex expression:
+(5 * (100 / 20))  Result: 25. Parentheses enforce evaluation order.
 ```
 
 ### 3.3. Data Types
