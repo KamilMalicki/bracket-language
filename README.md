@@ -203,3 +203,6 @@ The following script implements a simple game, demonstrating the use of many of 
 (print "Congratulations! You guessed the number.")
 (print "It took you " + (String attempt_counter) + " attempts.")
 ```
+
+6. Author
+This interpreter and language were created by Kamil Malicki.
