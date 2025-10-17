@@ -171,10 +171,7 @@ All other values are treated as **true**.
   * **Description**: Returns a random integer from the inclusive range `[min, max]`.
   * **Example**: `(def dice_roll (random 1 6))`
 
-## 5\. Comments in the language
-There are no comments in this language, so using the character to comment will cause an error
-
-## 6\. Complete Example: Number Guessing Game
+## 5\. Complete Example: Number Guessing Game
 
 The following script implements a simple game, demonstrating the use of many of the language's features.
 
@@ -204,5 +201,5 @@ The following script implements a simple game, demonstrating the use of many of 
 (print "It took you " + (String attempt_counter) + " attempts.")
 ```
 
-## 7\. Author
+## 6\. Author
 This interpreter and language were created by Kamil Malicki.
