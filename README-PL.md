@@ -171,11 +171,7 @@ Wszystkie pozostałe wartości są traktowane jako **prawda**.
   * **Opis**: Zwraca losową liczbę całkowitą z przedziału `[min, max]`.
   * **Przykład**: `(def rzut_kostka (random 1 6))`
 
-## 5\. Komentarze w języku
-
-W tym jezyku programowania nie istnieje forma definiowania komentarzy. Dlatego nie nalezy stosować komentarzy w kodach ponieważ wywali błąd krytyczny.
-
-## 6\. Kompletny Przykład: Gra w Zgadywanie Liczby
+## 5\. Kompletny Przykład: Gra w Zgadywanie Liczby
 
 Poniższy skrypt implementuje prostą grę, demonstrując użycie wielu funkcji języka.
 
@@ -208,5 +204,5 @@ Poniższy skrypt implementuje prostą grę, demonstrując użycie wielu funkcji 
 (print "Udało Ci się w " + (String licznik_prob) + " próbach.")
 ```
 
-## 7\. Autor
+## 6\. Autor
 Ten Język programowania i interpreter w całości został napisany przez Kamila Malickiego.
