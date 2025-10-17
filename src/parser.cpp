@@ -28,16 +28,22 @@ static Expression parse_expression(vector<Token>& tokens) {
     if (current_token_pos >= tokens.size()) throw runtime_error("Unexpected end of code.");
     Token token = tokens[current_token_pos++]; // Bierzemy token i przesuwamy wskaznik
 
-
-    // Obsluga specjalnej skladni 1' (get text 1)
+    // Zamiast tworzyć specjalny operator `_index_op`, od razu tworzymy
+    // standardowe wywołanie funkcji `get` w odpowiedniej kolejności argumentów.
     if (token.type == TOKEN_INDEX_OP) {
-        ExpressionList index_op_list;
+        ExpressionList get_call_list;
 
-        // Sztucznie tworzymy liste ( _index_op <numer> <nastepne_wyrazenie> )
-        index_op_list.push_back(Expression{Token{TOKEN_IDENTIFIER, "_index_op"}});
-        index_op_list.push_back(Expression{Token{TOKEN_NUMBER, token.text}});
-        index_op_list.push_back(parse_expression(tokens));
-        return Expression{index_op_list};
+        // 1. Dodajemy nazwę funkcji "get"
+        get_call_list.push_back(Expression{Token{TOKEN_IDENTIFIER, "get"}});
+
+        // 2. Parsujemy następne wyrażenie (które powinno być stringiem lub zmienną) i dodajemy je jako PIERWSZY argument
+        get_call_list.push_back(parse_expression(tokens));
+
+        // 3. Dodajemy indeks z apostrofu jako DRUGI argument
+        get_call_list.push_back(Expression{Token{TOKEN_NUMBER, token.text}});
+
+        // Wynikiem jest poprawna lista, np. (get tekst 0), którą ewaluator rozumie bez żadnych modyfikacji.
+        return Expression{get_call_list};
     }
 
     // Jesli token nie jest nawiasem otwierajacym, to jest to proste wyrazenie (atom) - np. liczba, string, nazwa zmiennej
