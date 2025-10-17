@@ -1,5 +1,5 @@
 /**
-* Copyright 2025 KamilMalicki
+ * Copyright 2025 KamilMalicki
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -59,10 +59,32 @@ Value evaluate(const Expression& expr, Environment& env) {
             static const unordered_set<string> keywords = {
                 "def", "print", "if", "loop","do",
                 "String", "Number", "typeof", "fun", "input",
-                "len", "get", "set", "sys", "Random", "ord", "chr"
+                "len", "get", "set", "sys", "random", "ord", "chr",
+
+                // on nie jest normalnym słowem kluczowym on jest tylko poto aby go wyłapał ale nie jest jak print albo def
+                "_index_op" // Dodajemy nasz wewnętrzny operator do rozpoznawanych słów
             };
 
             if (keywords.count(keyword)) {
+                // Bezpośrednio obsługujemy wewnętrzny operator _index_op
+                if (keyword == "_index_op") {
+                    if (list.size() != 3) throw runtime_error("Invalid syntax for index operator '.");
+                    // Parser tworzy listę w formacie (_index_op <index> <string>)
+                    // więc pobieramy argumenty we właściwej kolejności.
+                    Value str_val = evaluate(list[2], env); // String jest na 3. pozycji (indeks 2)
+                    if (str_val.type != TYPE_STRING) throw runtime_error("Type error: The argument to index operator ' must be a string.");
+
+                    Value idx_val = evaluate(list[1], env); // Index jest na 2. pozycji (indeks 1)
+                    if (idx_val.type != TYPE_NUMBER) throw runtime_error("Type error: The index for operator ' must be a number.");
+
+                    const string& str = get<string>(str_val.data);
+                    int_fast64_t idx = get<int_fast64_t>(idx_val.data);
+
+                    if (idx < 0 || idx >= str.length()) throw runtime_error("Index out of bounds for operator '.");
+
+                    return Value{string(1, str[idx]), TYPE_STRING};
+                }
+
                 // obsluga 'def' - tworzenie nowej zmiennej w srodowisku
                 if (keyword == "def") {
                     if (list.size() != 3) throw runtime_error("'def' requires 2 arguments (name, value), but received " + to_string(list.size() - 1) + ".");
@@ -192,13 +214,10 @@ Value evaluate(const Expression& expr, Environment& env) {
                 }
                 // Generowanie liczby losowej z przedzialu
                 if (keyword == "random") {
-                    // Sprawdzamy, czy mamy dwa argumenty (min, max)
                     if (list.size() != 3) throw runtime_error("'random' requires 2 arguments (min, max), but received " + to_string(list.size() - 1) + ".");
-
                     Value min_arg = evaluate(list[1], env);
                     Value max_arg = evaluate(list[2], env);
 
-                    // Sprawdzamy, czy argumenty sa liczbami
                     if (min_arg.type != TYPE_NUMBER || max_arg.type != TYPE_NUMBER) throw runtime_error("Type error: Arguments for 'random' must be numbers.");
 
                     int_fast64_t min_val = get<int_fast64_t>(min_arg.data);
@@ -206,8 +225,6 @@ Value evaluate(const Expression& expr, Environment& env) {
 
                     if (min_val > max_val) throw runtime_error("First argument to 'random' cannot be greater than the second argument.");
 
-                    // Uzywamy nowoczesnego C++ do generowania losowych liczb
-                    // Silnik jest 'static', zeby nie byl tworzony i seedowany przy kazdym wywolaniu
                     static std::mt19937 gen(std::random_device{}());
                     std::uniform_int_distribution<int_fast64_t> distrib(min_val, max_val);
 
@@ -220,10 +237,8 @@ Value evaluate(const Expression& expr, Environment& env) {
                     if (val.type != TYPE_STRING || get<string>(val.data).empty()) {
                         throw runtime_error("Argument for 'ord' must be a non-empty string.");
                     }
-                    // Zwracamy kod ASCII jako liczbe
                     return Value{(int_fast64_t)(get<string>(val.data)[0]), TYPE_NUMBER};
                 }
-
                 // Zwraca jednoznakowy string dla podanego kodu ASCII
                 if (keyword == "chr") {
                     if (list.size() != 2) throw runtime_error("'chr' requires 1 argument (number).");
@@ -231,7 +246,6 @@ Value evaluate(const Expression& expr, Environment& env) {
                     if (val.type != TYPE_NUMBER) {
                         throw runtime_error("Argument for 'chr' must be a number.");
                     }
-                    // Tworzymy string z jednego znaku i go zwracamy
                     string s(1, (char)get<int_fast64_t>(val.data));
                     return Value{s, TYPE_STRING};
                 }
@@ -245,11 +259,8 @@ Value evaluate(const Expression& expr, Environment& env) {
             const BraceFunction& func = get<BraceFunction>(first_val.data);
             if (func.parameters.size() != list.size() - 1) throw runtime_error("Incorrect number of arguments for function call. Expected " + to_string(func.parameters.size()) + ", but got " + to_string(list.size() - 1) + ".");
 
-            // Tworzymy nowe srodowisko dla wywolania funkcji, kopiujac te z momentu jej definicji
             Environment call_env = *func.closure_env;
-            // Przypisujemy argumenty do parametrow w nowym srodowisku
             for (size_t i = 0; i < func.parameters.size(); ++i) call_env[func.parameters[i]] = evaluate(list[i + 1], env);
-            // Wykonujemy cialo funkcji w jej wlasnym srodowisku
             return evaluate(*func.body, call_env);
         }
 
@@ -259,7 +270,6 @@ Value evaluate(const Expression& expr, Environment& env) {
             const Token& op = get<Token>(list[i].data);
             Value rhs = evaluate(list[i+1], env);
 
-            // Operator '+' dziala na stringach i liczbach
             if (op.text == "+") {
                 if (result.type == TYPE_STRING || rhs.type == TYPE_STRING) {
                     result.data = value_to_string(result) + value_to_string(rhs);
@@ -271,7 +281,6 @@ Value evaluate(const Expression& expr, Environment& env) {
                 continue;
             }
 
-            // Operatory porownania dzialaja na wszystkim (po konwersji na string)
             if (op.text == "==") {
                 result.data = (int_fast64_t)(value_to_string(result) == value_to_string(rhs));
                 result.type = TYPE_NUMBER;
@@ -283,7 +292,6 @@ Value evaluate(const Expression& expr, Environment& env) {
                 continue;
             }
 
-            // Pozostale operatory wymagaja liczb
             if (result.type != TYPE_NUMBER || rhs.type != TYPE_NUMBER) throw runtime_error("Type error: Operator '" + op.text + "' requires numeric operands.");
 
             int_fast64_t left_num = get<int_fast64_t>(result.data);
@@ -304,6 +312,5 @@ Value evaluate(const Expression& expr, Environment& env) {
         return result;
     }
 
-    // Jakis blad, nie powinno sie tu nigdy trafic
     throw runtime_error("Critical error: Failed to interpret expression.");
 }
