@@ -22,24 +22,48 @@ vector<Token> tokenize(const string& source) {
     while (i < source.length()) {
         char c = source[i];
 
-        // Ignorujemy biale znaki
-        if (isspace(c)) { i++; continue; }
-
-        // Proste tokeny jednoznakowe - nawiasy
-        if (c == '(') { tokens.push_back({TOKEN_LPAREN, "("}); i++; continue; }
-        if (c == ')') { tokens.push_back({TOKEN_RPAREN, ")"}); i++; continue; }
-
-        // Operatory jednoznakowe
-        if (c == '+' || c == '-' || c == '*' || c == '/' || c == '%') {
-            tokens.push_back({TOKEN_OPERATOR, string(1, c)}); i++; continue;
+        // 1. Ignorujemy biale znaki (spacje, tabulatory, nowe linie)
+        if (isspace(c)) {
+            i++;
+            continue;
         }
 
-        // Operatory ktore moga miec dwa znaki (np. ==, !=, >=, <=)
+        // ***************************************************************
+        // *** OTO POPRAWKA DLA KOMENTARZY                             ***
+        // ***************************************************************
+        // Jeśli napotkamy średnik, ignorujemy wszystko do końca linii.
+        if (c == ';') {
+            while (i < source.length() && source[i] != '\n') {
+                i++;
+            }
+            continue; // Przechodzimy do następnej iteracji głównej pętli
+        }
+
+        // 2. Proste tokeny jednoznakowe - nawiasy
+        if (c == '(') {
+            tokens.push_back({TOKEN_LPAREN, "("});
+            i++;
+            continue;
+        }
+        if (c == ')') {
+            tokens.push_back({TOKEN_RPAREN, ")"});
+            i++;
+            continue;
+        }
+
+        // 3. Operatory jednoznakowe
+        if (c == '+' || c == '-' || c == '*' || c == '/' || c == '%') {
+            tokens.push_back({TOKEN_OPERATOR, string(1, c)});
+            i++;
+            continue;
+        }
+
+        // 4. Operatory, ktore moga miec dwa znaki (np. ==, !=, >=, <=)
         if (c == '=' || c == '!' || c == '<' || c == '>') {
             string op_str;
             op_str += c;
             i++;
-            // Sprawdzamy czy nastepny znak to '='
+            // Sprawdzamy, czy nastepny znak to '=', aby stworzyc operator dwuznakowy
             if (i < source.length() && source[i] == '=') {
                 op_str += source[i];
                 i++;
@@ -48,43 +72,61 @@ vector<Token> tokenize(const string& source) {
             continue;
         }
 
-        // Stringi w cudzyslowach
+        // 5. Stringi w cudzyslowach
         if (c == '"') {
-            string str_value; i++; // pomijamy cudzyslow
+            string str_value;
+            i++; // pomijamy cudzyslow otwierajacy
             while (i < source.length() && source[i] != '"') {
-                // obsluga znakow specjalnych jak \n, \t
+                // Obsluga znakow specjalnych jak \n, \t (tzw. escape characters)
                 if (source[i] == '\\' && i + 1 < source.length()) {
-                    i++;
+                    i++; // pomijamy backslash
                     switch (source[i]) {
-                        case 'n': str_value += '\n'; break; case 't': str_value += '\t'; break;
-                        case 'r': str_value += '\r'; break; default: str_value += source[i]; break;
+                        case 'n': str_value += '\n'; break;
+                        case 't': str_value += '\t'; break;
+                        case 'r': str_value += '\r'; break;
+                        default: str_value += source[i]; break; // np. dla \"
                     }
-                } else  str_value += source[i];
+                } else {
+                    str_value += source[i];
+                }
                 i++;
             }
             i++; // pomijamy cudzyslow zamykajacy
-            tokens.push_back({TOKEN_STRING, str_value}); continue;
+            tokens.push_back({TOKEN_STRING, str_value});
+            continue;
         }
 
-        // Liczby
+        // 6. Liczby
         if (isdigit(c)) {
             string num_str;
-            // zbieramy wszystkie cyfry pod rzad
-            while (i < source.length() && isdigit(source[i])) num_str += source[i++];
+            // Zbieramy wszystkie cyfry pod rzad, tworzac pelna liczbe
+            while (i < source.length() && isdigit(source[i])) {
+                num_str += source[i++];
+            }
 
-            // Specjalna skladnia dla operatora index' - np. 1' to to samo co (get text 1)
+            // Specjalna skladnia dla operatora ' - np. 1' to to samo co (get text 1)
             if (i < source.length() && source[i] == '\'') {
                 i++;
                 tokens.push_back({TOKEN_INDEX_OP, num_str});
-            } else tokens.push_back({TOKEN_NUMBER, num_str});
+            } else {
+                tokens.push_back({TOKEN_NUMBER, num_str});
+            }
+            continue;
         }
-        // Identyfikatory (nazwy zmiennych, funkcji)
-        else if (isalpha(c)) {
+
+        // 7. Identyfikatory (nazwy zmiennych, funkcji)
+        if (isalpha(c)) {
             string identifier;
             // zbieramy wszystko co jest litera, cyfra lub podkreslnikiem
-            while (i < source.length() && (isalnum(source[i]) || source[i] == '_')) identifier += source[i++];
+            while (i < source.length() && (isalnum(source[i]) || source[i] == '_')) {
+                identifier += source[i++];
+            }
             tokens.push_back({TOKEN_IDENTIFIER, identifier});
-        } else i++; // jakis nieznany znak, po prostu go ignorujemy i idziemy dalej
+            continue;
+        }
+
+        // 8. Jesli jakis znak nie pasuje do zadnej kategorii, po prostu go ignorujemy
+        i++;
     }
     return tokens;
 }
