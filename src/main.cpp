@@ -38,6 +38,7 @@ int main(int argc, char* argv[]) {
     if (argc != 2) {
         error_label:
         cout
+            << endl
             << "########################################################################"
             << endl
             << "# --------- --------- Bracket Language interpreter --------- --------- #"
