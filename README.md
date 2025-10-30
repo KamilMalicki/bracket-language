@@ -1,6 +1,6 @@
 # Bracket Programming Language - Technical Documentation
 
-![Demo](demo.mp4)
+![Demo](demo.gif)
 
 ## 1\. Introduction
 
