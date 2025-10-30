@@ -1,5 +1,7 @@
 # Bracket Programming Language - Technical Documentation
 
+![Demo](demo.mp4)
+
 ## 1\. Introduction
 
 **Bracket Language** is an esoteric programming language (esolang) designed to explore unconventional syntax concepts. Its primary feature, which defines its esoteric nature, is the unique combination of two paradigms:
