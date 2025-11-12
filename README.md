@@ -202,6 +202,8 @@ The following script implements a simple game, demonstrating the use of many of 
 (print "Congratulations! You guessed the number.")
 (print "It took you " + (String attempt_counter) + " attempts.")
 ```
+## 6\. Extensions
+I invite you to download the extension for visual studio code which will give the language colors and a nice look.
 
-## 6\. Author
+## 7\. Author
 This interpreter and language were created by Kamil Malicki.
