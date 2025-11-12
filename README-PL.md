@@ -203,6 +203,8 @@ Poniższy skrypt implementuje prostą grę, demonstrując użycie wielu funkcji 
 (print "Gratulacje! Odgadłeś liczbę.")
 (print "Udało Ci się w " + (String licznik_prob) + " próbach.")
 ```
+## 6\. Rozszerzenie
+Zachęcam do pobrania rozszerzenia do Visual Studio Code, które doda językowi kolorów i ładnego wyglądu.
 
-## 6\. Autor
+## 7\. Autor
 Ten Język programowania i interpreter w całości został napisany przez Kamila Malickiego.
